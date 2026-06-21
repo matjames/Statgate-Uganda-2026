@@ -124,7 +124,10 @@ export default function Header() {
               <Link to="/reports" className="text-foreground/80 hover:text-primary transition-colors">Reports</Link>
               <Link to="/ai" className="text-foreground/80 hover:text-primary transition-colors">AI</Link>
               {user?.role === "Sovereign Admin" && (
-                <Link to="/governance" className="text-foreground/80 hover:text-primary transition-colors">Governance</Link>
+                <>
+                  <Link to="/governance" className="text-foreground/80 hover:text-primary transition-colors">Governance</Link>
+                  <Link to="/advanced" className="text-foreground/80 hover:text-primary transition-colors">Advanced</Link>
+                </>
               )}
             </>
           )}
@@ -193,7 +196,10 @@ export default function Header() {
                   <Link to="/reports" onClick={() => setIsMenuOpen(false)} className="text-foreground/80 hover:text-primary transition-colors">Reports</Link>
                   <Link to="/ai" onClick={() => setIsMenuOpen(false)} className="text-foreground/80 hover:text-primary transition-colors">AI</Link>
                   {user?.role === "Sovereign Admin" && (
-                     <Link to="/governance" onClick={() => setIsMenuOpen(false)} className="text-foreground/80 hover:text-primary transition-colors">Governance</Link>
+                    <>
+                      <Link to="/governance" onClick={() => setIsMenuOpen(false)} className="text-foreground/80 hover:text-primary transition-colors">Governance</Link>
+                      <Link to="/advanced" onClick={() => setIsMenuOpen(false)} className="text-foreground/80 hover:text-primary transition-colors">Advanced</Link>
+                    </>
                   )}
                 </>
               )}

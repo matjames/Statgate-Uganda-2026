@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Shield, GitCommit, FileCheck, CheckCircle2, AlertTriangle, Check, Loader2 } from "lucide-react";
+import { Shield, GitCommit, FileCheck, AlertTriangle, Check, Loader2, Database, Key, Activity, Lightbulb } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -77,50 +77,79 @@ export default function Governance() {
   return (
     <div className="flex flex-col min-h-screen bg-muted/20">
       <div className="container mx-auto px-4 py-8">
+        
+        {/* Quote Banner */}
+        <div className="bg-[#0A1D56] text-white rounded-xl p-6 mb-8 shadow-md flex justify-between items-center relative overflow-hidden">
+          <div className="relative z-10">
+            <Badge className="bg-[#FFC107] text-[#0A1D56] mb-2 uppercase hover:bg-[#FFC107]">Phase 3 Active</Badge>
+            <h2 className="text-2xl font-bold tracking-tight">Data Governance & Quality</h2>
+            <p className="text-gray-300 font-medium mt-1">Correlation doesn't mean causation. Look deeper. Think smarter. Decide better.</p>
+          </div>
+          <Shield className="hidden md:block absolute right-8 text-white/10" size={100} />
+        </div>
+
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold text-primary font-serif">Data Governance</h1>
-              <Badge variant="outline" className="font-mono bg-blue-500/10 text-blue-600 border-blue-500/20">
-                STRICT
-              </Badge>
+              <h1 className="text-3xl font-bold text-[#0A1D56] font-serif uppercase tracking-tight">Governance Space</h1>
             </div>
-            <p className="text-muted-foreground">Lineage tracing, approvals, and quality assurance.</p>
+            <p className="text-muted-foreground mt-1">Lineage tracing, schema validation, and institutional data access control.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Shield className="mr-2 h-4 w-4" /> Audit Policies
+            <Button className="bg-[#0A1D56] text-white hover:bg-[#0A1D56]/90">
+              <FileCheck className="mr-2 h-4 w-4" /> Download Audit Report
             </Button>
           </div>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: "Governed Datasets", value: "34", icon: Database },
+            { label: "Active Pipelines", value: "8", icon: Activity },
+            { label: "Pending Reviews", value: "3", icon: AlertTriangle },
+            { label: "Access Requests", value: "12", icon: Key },
+          ].map((stat, i) => (
+            <Card key={i} className="border-0 shadow-sm border-t-2 border-t-[#0A1D56]">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-muted-foreground uppercase">{stat.label}</p>
+                  <p className="text-3xl font-bold text-[#0A1D56]">{stat.value}</p>
+                </div>
+                <div className="p-3 bg-[#0A1D56]/5 rounded-xl">
+                  <stat.icon className="h-6 w-6 text-[#0A1D56]" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-xl">Lineage Graph (Recent Pipelines)</CardTitle>
+          <Card className="lg:col-span-2 border-0 shadow-sm">
+            <CardHeader className="bg-gray-50/50 border-b">
+              <CardTitle className="text-lg text-[#0A1D56]">Lineage Graph (Recent Pipelines)</CardTitle>
               <CardDescription>Track the journey of data from ingestion to consumption.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
+            <CardContent className="pt-6">
+              <div className="space-y-4">
                 {pipelines.map((pipeline: any, idx: number) => (
-                  <div key={idx} className={`flex items-center gap-4 p-4 border rounded-lg bg-background ${pipeline.status === 'Running' ? 'border-blue-500 animate-pulse' : ''}`}>
-                    <div className="p-3 bg-muted rounded-full">
-                      {pipeline.status === 'Running' ? <Loader2 className="h-5 w-5 text-blue-500 animate-spin" /> : <GitCommit className="h-5 w-5 text-primary" />}
+                  <div key={idx} className={`flex items-center gap-4 p-4 border rounded-xl bg-white transition-all shadow-sm ${pipeline.status === 'Running' ? 'border-[#0A1D56]/30' : ''}`}>
+                    <div className="p-3 bg-[#0A1D56]/5 rounded-xl">
+                      {pipeline.status === 'Running' ? <Loader2 className="h-5 w-5 text-[#0A1D56] animate-spin" /> : <GitCommit className="h-5 w-5 text-[#0A1D56]" />}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-sm">
+                      <h3 className="font-bold text-sm text-[#0A1D56]">
                         {pipeline.name}
-                        {pipeline.recordsProcessed && <span className="ml-2 text-xs text-muted-foreground font-normal">({pipeline.recordsProcessed.toLocaleString()} records)</span>}
+                        {pipeline.recordsProcessed && <span className="ml-2 text-xs text-muted-foreground font-mono font-medium">{pipeline.recordsProcessed.toLocaleString()} records</span>}
                       </h3>
-                      <p className="text-xs text-muted-foreground">{pipeline.steps}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{pipeline.steps}</p>
                     </div>
                     <Badge variant={pipeline.status === "Healthy" ? "default" : pipeline.status === "Running" ? "outline" : "secondary"} 
-                           className={pipeline.status === "Healthy" ? "bg-green-100 text-green-800" : pipeline.status === "Running" ? "bg-blue-100 text-blue-800 border-blue-500" : "bg-yellow-100 text-yellow-800"}>
+                           className={pipeline.status === "Healthy" ? "bg-green-100 text-green-800 hover:bg-green-200" : pipeline.status === "Running" ? "bg-blue-100 text-blue-800 border-blue-200" : "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"}>
                       {pipeline.status}
                     </Badge>
-                    {pipeline.status === "Pending Review" && user?.role === "Sovereign Admin" && (
-                      <Button variant="outline" size="sm" onClick={() => approvePipeline(pipeline.id)}>
-                        <Check className="h-4 w-4 mr-1" /> Approve
+                    {pipeline.status === "Pending Review" && (
+                      <Button variant="outline" size="sm" onClick={() => approvePipeline(pipeline.id)} className="ml-2">
+                        <Check className="h-4 w-4 mr-1 text-green-600" /> Approve
                       </Button>
                     )}
                   </div>
@@ -129,23 +158,26 @@ export default function Governance() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">Quality Alerts</CardTitle>
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="bg-gray-50/50 border-b">
+              <CardTitle className="text-lg text-[#0A1D56]">Quality Alerts</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="pt-6 space-y-4">
               {alerts.length === 0 ? (
-                <div className="text-sm text-muted-foreground">No active alerts.</div>
+                 <div className="flex flex-col items-center justify-center p-6 text-center">
+                    <FileCheck className="h-10 w-10 text-green-500/50 mb-3" />
+                    <p className="text-sm font-medium text-gray-500">System is fully verified.<br/>No active anomalies.</p>
+                 </div>
               ) : alerts.map((alert: any, idx: number) => (
-                <div key={idx} className={`flex items-center justify-between gap-3 p-3 text-sm rounded-md border ${alert.type === 'error' ? 'bg-red-50 text-red-900 border-red-100' : 'bg-blue-50 text-blue-900 border-blue-100'}`}>
-                  <div className="flex items-center gap-3">
-                    {alert.type === 'error' ? <AlertTriangle className="h-5 w-5 shrink-0 text-red-600" /> : <FileCheck className="h-5 w-5 shrink-0 text-blue-600" />}
+                <div key={idx} className={`flex items-start justify-between gap-3 p-3 text-sm rounded-xl border ${alert.type === 'error' ? 'bg-red-50/50 text-red-900 border-red-100' : 'bg-blue-50/50 text-blue-900 border-blue-100'}`}>
+                  <div className="flex items-start gap-3 flex-1">
+                    {alert.type === 'error' ? <AlertTriangle className="h-5 w-5 shrink-0 text-red-600 mt-0.5" /> : <Lightbulb className="h-5 w-5 shrink-0 text-[#0A1D56] mt-0.5" />}
                     <div>
                       <div className="font-bold">{alert.title}</div>
-                      <div className="text-xs opacity-80">{alert.description}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{alert.description}</div>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => acknowledgeAlert(alert.id)}>Dismiss</Button>
+                  <Button variant="ghost" size="sm" className="h-7 px-2 hover:bg-transparent" onClick={() => acknowledgeAlert(alert.id)}>Dismiss</Button>
                 </div>
               ))}
             </CardContent>
@@ -155,3 +187,4 @@ export default function Governance() {
     </div>
   );
 }
+

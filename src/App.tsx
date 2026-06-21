@@ -30,10 +30,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 import ParticipantPortal from "@/pages/ParticipantPortal";
 
+import AdvancedSystems from "@/pages/AdvancedSystems";
+
 export default function App() {
   return (
     <Router>
-      <Suspense fallback={<div className="flex h-screen items-center justify-center bg-background text-primary font-serif text-2xl animate-pulse">Initializing StatGate Sovereign Engine...</div>}>
+      <Suspense fallback={<div className="flex h-screen items-center justify-center bg-background text-[#0A1D56] font-bold text-2xl animate-pulse">Initializing StatGate Uganda Operating System...</div>}>
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">
@@ -83,6 +85,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <AIWorkspace />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/advanced" 
+                element={
+                  <ProtectedRoute>
+                    <AdvancedSystems />
                   </ProtectedRoute>
                 } 
               />

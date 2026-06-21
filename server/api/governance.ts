@@ -5,33 +5,14 @@ import { getCloudPipelines, isCloudPersistenceEnabled } from "../services/fireba
 export const governanceRouter = Router();
 
 let pipelines = [
-  {
-    id: "pipeline-1",
-    name: "Census Aggregation Pipeline",
-    steps: "Ingested via API ➔ Cleaned ➔ Anonymized ➔ Published",
-    status: "Healthy",
-  },
-  {
-    id: "pipeline-2",
-    name: "Health Facility Mapping",
-    steps: "Mobile App ➔ Validation Queue ➔ Geocoded",
-    status: "Pending Review",
-  }
+  { id: "1", name: "National Census Sync", steps: "Extract > Validate > Load", status: "Healthy", recordsProcessed: 4500000 },
+  { id: "2", name: "Economic Indicators Pipeline", steps: "API Fetch > Cleanse > Index", status: "Running", recordsProcessed: 120000 },
+  { id: "3", name: "Health Infrastructure Data", steps: "Submit > Manual Review > Approve", status: "Pending Review", recordsProcessed: 850 }
 ];
 
 let alerts = [
-  {
-    id: "alert-1",
-    type: "error",
-    title: "Missing Coordinates",
-    description: "14 records in Western Region failed spatial validation."
-  },
-  {
-    id: "alert-2",
-    type: "info",
-    title: "Schema Update Request",
-    description: "Education dataset requires new structure approval."
-  }
+  { id: "a1", type: "error", title: "Anomaly Detected", description: "Unusual spike in reported population density in Wakiso." },
+  { id: "a2", type: "info", title: "New Schema Contract", description: "Economic indicators dataset updated its schema." }
 ];
 
 // RBAC: Only Sovereign Admin, Lead Analyst can fetch lineage
