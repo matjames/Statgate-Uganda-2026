@@ -44,6 +44,51 @@ try {
   console.error("[Firebase Service] Initialization error:", err.message);
 }
 
+// Ensure platform/system diagnostics are supported with compliant JSON formatting
+export enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+export interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: "sovereign-node-agent",
+      email: "agent@statgate.sovereignty",
+      emailVerified: true,
+      isAnonymous: false,
+      tenantId: null,
+      providerInfo: []
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
+
 export function isCloudPersistenceEnabled() {
   return isFirebaseActive;
 }
@@ -51,8 +96,9 @@ export function isCloudPersistenceEnabled() {
 // 1. Audit Logs Sync
 export async function syncAuditLogToCloud(userId: string, action: string, entity: string, changes: any) {
   if (!isFirebaseActive) return;
+  const pathForWrite = "audit_logs";
   try {
-    const colRef = collection(db, "audit_logs");
+    const colRef = collection(db, pathForWrite);
     await addDoc(colRef, {
       userId,
       action,
@@ -62,32 +108,42 @@ export async function syncAuditLogToCloud(userId: string, action: string, entity
     });
     console.log("[Firebase Service] Audit log synced with Firestore.");
   } catch (err: any) {
-    console.error("[Firebase Service] Failed to sync audit log:", err.message);
+    if (err.message && err.message.includes("permission")) {
+      handleFirestoreError(err, OperationType.WRITE, pathForWrite);
+    } else {
+      console.error("[Firebase Service] Failed to sync audit log:", err.message);
+    }
   }
 }
 
 // 2. Chat Messages Sync
 export async function syncChatMessageToCloud(senderId: number | string, senderEmail: string, content: string) {
   if (!isFirebaseActive) return;
+  const pathForWrite = "chat_messages";
   try {
-    const colRef = collection(db, "chat_messages");
+    const colRef = collection(db, pathForWrite);
     const docRef = await addDoc(colRef, {
-      senderId,
+      senderId: String(senderId),
       senderEmail,
       content,
       created_at: serverTimestamp()
     });
     return docRef.id;
   } catch (err: any) {
-    console.error("[Firebase Service] Failed to sync message:", err.message);
+    if (err.message && err.message.includes("permission")) {
+      handleFirestoreError(err, OperationType.WRITE, pathForWrite);
+    } else {
+      console.error("[Firebase Service] Failed to sync message:", err.message);
+    }
   }
 }
 
 // Get recent chat messages
 export async function getCloudChatHistory(limitCount: number = 50) {
   if (!isFirebaseActive) return null;
+  const pathForGet = "chat_messages";
   try {
-    const colRef = collection(db, "chat_messages");
+    const colRef = collection(db, pathForGet);
     const q = query(colRef, orderBy("created_at", "asc"), limit(limitCount));
     const querySnapshot = await getDocs(q);
     const msgs: any[] = [];
@@ -98,7 +154,6 @@ export async function getCloudChatHistory(limitCount: number = 50) {
         try {
           dateString = data.created_at.toDate().toISOString();
         } catch (e) {
-          // fallback if it's not a Timestamp object yet due to serverTimestamp() delay
           dateString = new Date().toISOString();
         }
       }
@@ -112,14 +167,19 @@ export async function getCloudChatHistory(limitCount: number = 50) {
     });
     return msgs;
   } catch (err: any) {
-    console.error("[Firebase Service] Failed to fetch cloud chat:", err.message);
-    return null;
+    if (err.message && err.message.includes("permission")) {
+      handleFirestoreError(err, OperationType.GET, pathForGet);
+    } else {
+      console.error("[Firebase Service] Failed to fetch cloud chat:", err.message);
+      return null;
+    }
   }
 }
 
 // 3. Automated Pipelines State Tracking
 export async function syncPipelineToCloud(pipelineId: string, name: string, steps: string, status: string, recordsProcessed?: number) {
   if (!isFirebaseActive) return;
+  const pathForWrite = `pipelines/${pipelineId}`;
   try {
     const docRef = doc(db, "pipelines", pipelineId);
     await setDoc(docRef, {
@@ -132,15 +192,20 @@ export async function syncPipelineToCloud(pipelineId: string, name: string, step
     });
     console.log(`[Firebase Service] Pipeline ${pipelineId} state synchronized.`);
   } catch (err: any) {
-    console.error(`[Firebase Service] Failed to sync pipeline state:`, err.message);
+    if (err.message && err.message.includes("permission")) {
+      handleFirestoreError(err, OperationType.WRITE, pathForWrite);
+    } else {
+      console.error(`[Firebase Service] Failed to sync pipeline state:`, err.message);
+    }
   }
 }
 
 // Get recent pipelines
 export async function getCloudPipelines() {
   if (!isFirebaseActive) return null;
+  const pathForGet = "pipelines";
   try {
-    const colRef = collection(db, "pipelines");
+    const colRef = collection(db, pathForGet);
     const q = query(colRef, orderBy("timestamp", "desc"), limit(10));
     const querySnapshot = await getDocs(q);
     const pipelines: any[] = [];
@@ -165,7 +230,11 @@ export async function getCloudPipelines() {
     });
     return pipelines;
   } catch (err: any) {
-    console.error("[Firebase Service] Failed to fetch pipelines:", err.message);
-    return null;
+    if (err.message && err.message.includes("permission")) {
+      handleFirestoreError(err, OperationType.GET, pathForGet);
+    } else {
+      console.error("[Firebase Service] Failed to fetch pipelines:", err.message);
+      return null;
+    }
   }
 }

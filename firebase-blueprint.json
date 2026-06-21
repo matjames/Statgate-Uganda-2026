@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "System audit log for tracking administrative and operator modifications",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "action": { "type": "string" },
+        "entity": { "type": "string" },
+        "changes": { "type": "string" }
+      },
+      "required": ["userId", "action", "entity", "changes"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Chat and communications between operators and administrative users",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "senderEmail": { "type": "string" },
+        "content": { "type": "string" }
+      },
+      "required": ["senderId", "senderEmail", "content"]
+    },
+    "Pipeline": {
+      "title": "Pipeline",
+      "description": "Automated data ingestion pipeline run state tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "steps": { "type": "string" },
+        "status": { "type": "string" },
+        "recordsProcessed": { "type": "number" }
+      },
+      "required": ["id", "name", "steps", "status"]
+    }
+  },
+  "firestore": {
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Historical repository of all system audit logs"
+    },
+    "/chat_messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Operator chat room messages"
+    },
+    "/pipelines/{pipelineId}": {
+      "schema": "Pipeline",
+      "description": "Real-time state tracking of ingestion pipelines"
+    }
+  }
+}

@@ -1,19 +1,69 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Audit logs are read-only for admins and write-only for authenticated systems
+
+    // --- Phase 4: Global Safety Net (Default Deny) ---
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper: Valid Identifiers
+    function isValidId(id) {
+      return id is string 
+        && id.size() <= 128 
+        && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming(req) {
+      return req.resource.data;
+    }
+
+    // --- 1. Audit Logs helper & rules ---
+    function isValidAuditLog(data) {
+      return data.keys().hasAll(['userId', 'action', 'entity', 'changes'])
+        && data.keys().size() <= 6
+        && (data.userId is string && data.userId.size() <= 128)
+        && (data.action is string && data.action.size() <= 128)
+        && (data.entity is string && data.entity.size() <= 128)
+        && (data.changes is string && data.changes.size() <= 10000)
+        && (!('timestamp' in data) || data.timestamp == request.time);
+    }
+
     match /audit_logs/{logId} {
-      allow read, write: if true;
+      allow create: if isValidId(logId) && isValidAuditLog(incoming(request));
+      allow read: if true;
     }
 
-    // Chat messages can be read & written
+    // --- 2. Chat Messages helper & rules ---
+    function isValidChatMessage(data) {
+      return data.keys().hasAll(['senderId', 'senderEmail', 'content'])
+        && data.keys().size() <= 5
+        && (data.senderId is string || data.senderId is int)
+        && (data.senderEmail is string && data.senderEmail.size() <= 256)
+        && (data.content is string && data.content.size() <= 5000)
+        && (!('created_at' in data) || data.created_at == request.time);
+    }
+
     match /chat_messages/{messageId} {
-      allow read, write: if true;
+      allow create: if isValidId(messageId) && isValidChatMessage(incoming(request));
+      allow read: if true;
     }
 
-    // Pipelines state
+    // --- 3. Pipelines helper & rules ---
+    function isValidPipeline(data) {
+      return data.keys().hasAll(['id', 'name', 'steps', 'status'])
+        && data.keys().size() <= 7
+        && (data.id is string && data.id.size() <= 128)
+        && (data.name is string && data.name.size() <= 256)
+        && (data.steps is string && data.steps.size() <= 256)
+        && (data.status is string && data.status.size() <= 64)
+        && (!('recordsProcessed' in data) || data.recordsProcessed == null || data.recordsProcessed is int)
+        && (!('timestamp' in data) || data.timestamp == request.time);
+    }
+
     match /pipelines/{pipelineId} {
-      allow read, write: if true;
+      allow create, update: if isValidId(pipelineId) && isValidPipeline(incoming(request));
+      allow read: if true;
     }
   }
 }

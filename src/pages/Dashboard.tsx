@@ -234,14 +234,17 @@ export default function Dashboard() {
               {dbStatus.firebase === "Active" && (
                 <Badge 
                   variant="default"
-                  className="flex items-center gap-1 bg-indigo-500 hover:bg-indigo-600 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold"
+                  className="flex items-center gap-1 bg-[#0A1D56] text-white font-semibold"
                 >
                   <Database className="h-3 w-3 animate-pulse" />
                   Cloud Node Active
                 </Badge>
               )}
             </div>
-            <p className="text-muted-foreground">Welcome back, Administrator. Here's what's happening today.</p>
+            <p className="text-muted-foreground mt-2 max-w-2xl text-lg">
+              Welcome back to <span className="font-bold text-[#0A1D56]">StatGate Uganda</span>. 
+              Here is your central command center for all sovereign data operations across the nation.
+            </p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" className="border-primary text-primary">

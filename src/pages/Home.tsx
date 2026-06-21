@@ -1,4 +1,5 @@
 import Hero from "@/components/home/Hero";
+import StatgateUgandaValues from "@/components/home/StatgateUgandaValues";
 import { motion } from "motion/react";
 import { Shield, Globe, Lock, CheckCircle2 } from "lucide-react";
 
@@ -6,6 +7,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <Hero />
+      <StatgateUgandaValues />
       
       {/* Trust Section */}
       <section className="bg-muted/30 py-20">

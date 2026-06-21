@@ -61,9 +61,12 @@ export default function Header() {
             className="h-10 w-10 rounded-lg object-cover"
             referrerPolicy="no-referrer"
           />
-          <div className="flex flex-col">
-            <span className="text-2xl font-bold tracking-tight text-primary font-serif leading-none">
-              Stat<span className="text-secondary">Gate</span>
+          <div className="flex flex-col ml-1">
+            <span className="text-2xl font-bold tracking-tighter text-[#0A1D56] leading-none uppercase">
+              Statgate
+            </span>
+            <span className="text-sm font-semibold tracking-widest text-muted-foreground leading-none">
+              UGANDA
             </span>
             <div className="flex items-center gap-1 mt-1">
               <div className={cn(

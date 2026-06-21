@@ -1,5 +1,11 @@
 {
-  "name": "StatGate Sovereign Engine",
-  "description": "V2.0 Sovereign Engine: African-led infrastructure for data sovereignty, featuring a geospatial command center, truth-meter auditing, and an automated fellowship pipeline.",
-  "requestFramePermissions": ["camera", "microphone"]
+  "name": "StatGate Uganda",
+  "description": "StatGate Uganda: Transforming raw data into insights for informed decisions. We collect. We analyze. We inform. You transform.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

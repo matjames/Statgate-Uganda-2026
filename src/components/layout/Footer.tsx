@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Github, Twitter, Linkedin } from "lucide-react";
+import { Shield, Github, Twitter, Linkedin, Facebook, Globe, Mail, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function Footer() {
@@ -15,28 +15,34 @@ export default function Footer() {
                 className="h-8 w-8 rounded-md object-cover"
                 referrerPolicy="no-referrer"
               />
-              <span className="text-xl font-bold tracking-tight text-primary font-serif">
-                Stat<span className="text-secondary">Gate</span>
-              </span>
+              <div className="flex flex-col ml-1">
+                <span className="text-xl font-bold tracking-tighter text-[#0A1D56] leading-none uppercase">
+                  Statgate
+                </span>
+                <span className="text-xs font-semibold tracking-widest text-muted-foreground leading-none">
+                  UGANDA
+                </span>
+              </div>
             </Link>
             <p className="text-sm text-muted-foreground">
-              Securing data, ensuring ethics, and empowering field research across Uganda and beyond.
+              Securing data, ensuring ethics, and empowering field research across Uganda and beyond. We Collect. We Analyze. We Inform. You Transform.
             </p>
-            <div className="flex space-x-4">
-              <Link to="#" className="text-muted-foreground hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link to="#" className="text-muted-foreground hover:text-primary">
-                <Linkedin className="h-5 w-5" />
-              </Link>
-              <Link to="#" className="text-muted-foreground hover:text-primary">
-                <Github className="h-5 w-5" />
-              </Link>
+            <div className="flex space-x-4 pt-2">
+              <a href="#" className="flex items-center text-muted-foreground hover:text-[#0A1D56]">
+                <Facebook className="h-5 w-5 mr-1 text-[#0A1D56]" />
+              </a>
+              <a href="#" className="flex items-center text-muted-foreground hover:text-[#0A1D56]">
+                <Linkedin className="h-5 w-5 mr-1 text-[#0A1D56]" />
+              </a>
+              <a href="#" className="flex items-center text-muted-foreground hover:text-[#0A1D56]">
+                <Twitter className="h-5 w-5 mr-1 text-[#0A1D56]" />
+                <span className="text-sm font-semibold">StatGate Uganda</span>
+              </a>
             </div>
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-primary">Sovereign Engine</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#0A1D56]">Sovereign Engine</h3>
             <ul className="space-y-2 text-sm">
               <li><Link to="/recruitment" className="text-muted-foreground hover:text-secondary">Fellowship Induction</Link></li>
               <li><Link to="/dashboard" className="text-muted-foreground hover:text-secondary">Geospatial Command</Link></li>
@@ -46,7 +52,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-primary">Architecture</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#0A1D56]">Architecture</h3>
             <ul className="space-y-2 text-sm">
               <li><Link to="/ethics" className="text-muted-foreground hover:text-secondary">Ethical Blueprint</Link></li>
               <li><Link to="/privacy" className="text-muted-foreground hover:text-secondary">Data Sovereignty</Link></li>
@@ -56,21 +62,25 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-primary">HQ: Kampala</h3>
-            <ul className="space-y-2 text-sm">
-              <li className="text-muted-foreground">Wandegeya, Kampala</li>
-              <li className="text-muted-foreground">sovereign@statgate.ug</li>
-              <li className="text-muted-foreground font-mono">+256 700 123456</li>
-              <li className="pt-2">
-                <Badge variant="outline" className="text-[10px] border-secondary text-secondary">
-                  LOCAL STORAGE: ACTIVE
-                </Badge>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#0A1D56]">Contact Us</h3>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-center text-muted-foreground">
+                <Globe className="h-4 w-4 mr-2 text-[#0A1D56]" />
+                www.statgate.ug
+              </li>
+              <li className="flex items-center text-muted-foreground">
+                <Mail className="h-4 w-4 mr-2 text-[#0A1D56]" />
+                info@statgate.ug
+              </li>
+              <li className="flex items-center text-muted-foreground font-semibold">
+                <Phone className="h-4 w-4 mr-2 text-[#0A1D56]" />
+                +256 752 714 374
               </li>
             </ul>
           </div>
         </div>
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} StatGate. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} StatGate Uganda. All rights reserved.</p>
         </div>
       </div>
     </footer>
