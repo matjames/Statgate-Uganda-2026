@@ -1,0 +1,5 @@
+{
+  "name": "StatGate Sovereign Engine",
+  "description": "V2.0 Sovereign Engine: African-led infrastructure for data sovereignty, featuring a geospatial command center, truth-meter auditing, and an automated fellowship pipeline.",
+  "requestFramePermissions": ["camera", "microphone"]
+}
